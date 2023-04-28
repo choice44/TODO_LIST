@@ -13,8 +13,11 @@ class Todo(models.Model):
     completion_at = models.DateTimeField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.is_complete == True:
-            self.completion_at = timezone.now()
-        else:
-            self.completion_at = None
+        if self.id:
+            old_instance = Todo.objects.get(id=self.id)
+            if old_instance.is_complete != self.is_complete:
+                if self.is_complete:
+                    self.completion_at = timezone.now()
+                else:
+                    self.completion_at = None
         super().save(*args, **kwargs)

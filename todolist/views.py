@@ -24,13 +24,13 @@ class TodoListView(APIView):
 
 
 class TodoDetailView(APIView):
-    def get(self, request, todolist_id):
-        todo = get_object_or_404(Todo, id=todolist_id)
+    def get(self, request, todo_id):
+        todo = get_object_or_404(Todo, id=todo_id)
         serializer = TodoListSerializer(todo)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, todolist_id):
-        todo = get_object_or_404(Todo, id=todolist_id)
+    def put(self, request, todo_id):
+        todo = get_object_or_404(Todo, id=todo_id)
         if not request.user == todo.user:
             return Response({"message": "권한이 없습니다."}, 403)
         serializer = TodoUpdateSerializer(todo, data=request.data)
@@ -39,8 +39,8 @@ class TodoDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, todolist_id):
-        todo = get_object_or_404(Todo, id=todolist_id)
+    def delete(self, request, todo_id):
+        todo = get_object_or_404(Todo, id=todo_id)
         if not request.user == todo.user:
             return Response({"message": "권한이 없습니다."}, 403)
         todo.delete()
